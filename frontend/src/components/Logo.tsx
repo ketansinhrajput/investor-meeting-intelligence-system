@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 
 interface LogoProps {
   onClick?: () => void
+  size?: 'default' | 'large'
 }
 
 const BAR_CONFIGS = [
@@ -13,37 +14,56 @@ const BAR_CONFIGS = [
   { baseH: 10, x: 30, animH: [10, 20, 14, 6,  10], duration: 1.9, delay: 0.25 },
 ]
 
-const ICON_SIZE = 40
 const BAR_WIDTH = 4
-const BAR_Y_BASE = 34 // bottom anchor
+const BAR_Y_BASE = 34 // bottom anchor in the 40×40 viewBox
 
-export function Logo({ onClick }: LogoProps) {
+const SIZE_CONFIG = {
+  default: { iconPx: 40, gap: 'gap-3', titleCls: 'text-base', subtitleCls: 'text-xs' },
+  large:   { iconPx: 56, gap: 'gap-4', titleCls: 'text-xl',   subtitleCls: 'text-sm' },
+}
+
+export function Logo({ onClick, size = 'default' }: LogoProps) {
   const controls = useAnimation()
+  const { iconPx, gap, titleCls, subtitleCls } = SIZE_CONFIG[size]
+  const isInteractive = !!onClick
 
   useEffect(() => {
     controls.start('visible')
   }, [controls])
 
+  const containerProps = {
+    className: `flex items-center ${gap} select-none group ${
+      isInteractive
+        ? 'bg-transparent border-0 p-0 cursor-pointer'
+        : 'cursor-default'
+    }`,
+    initial: 'hidden',
+    animate: controls,
+    variants: {
+      hidden: { opacity: 0, x: -12 },
+      visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
+    },
+    ...(isInteractive && {
+      whileHover: 'hovered',
+      whileTap: { scale: 0.97 },
+      onClick,
+    }),
+  }
+
   return (
-    <motion.button
-      onClick={onClick}
-      className="flex items-center gap-3 bg-transparent border-0 p-0 cursor-pointer select-none group"
-      initial="hidden"
-      animate={controls}
-      variants={{
-        hidden: { opacity: 0, x: -12 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-      }}
-      whileHover="hovered"
-      whileTap={{ scale: 0.97 }}
+    <motion.div
+      {...(isInteractive ? { as: 'button' } : {})}
+      {...containerProps}
+      // render as <button> when interactive, <div> otherwise
+      style={isInteractive ? { background: 'none', border: 'none', padding: 0 } : {}}
     >
       {/* ── Icon ── */}
       <motion.div
         className="relative flex-shrink-0"
-        style={{ width: ICON_SIZE, height: ICON_SIZE }}
-        variants={{
+        style={{ width: iconPx, height: iconPx }}
+        variants={isInteractive ? {
           hovered: { scale: 1.08, transition: { duration: 0.2 } },
-        }}
+        } : {}}
       >
         {/* Glow backdrop */}
         <motion.div
@@ -52,23 +72,23 @@ export function Logo({ onClick }: LogoProps) {
             background: 'linear-gradient(135deg, #1d4ed8 0%, #4f46e5 100%)',
             filter: 'blur(0px)',
           }}
-          variants={{
+          variants={isInteractive ? {
             hovered: {
               filter: 'blur(4px)',
               opacity: 0.7,
               scale: 1.15,
               transition: { duration: 0.3 },
             },
-          }}
+          } : {}}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         />
 
-        {/* Icon box */}
+        {/* Icon SVG — always 40×40 viewBox, scaled via width/height */}
         <svg
-          width={ICON_SIZE}
-          height={ICON_SIZE}
+          width={iconPx}
+          height={iconPx}
           viewBox="0 0 40 40"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -94,12 +114,10 @@ export function Logo({ onClick }: LogoProps) {
 
           {/* Background rounded square */}
           <rect width="40" height="40" rx="9" fill="url(#bgGrad)" />
-
           {/* Subtle inner border */}
           <rect width="40" height="40" rx="9" fill="none" stroke="white" strokeOpacity="0.12" strokeWidth="1" />
 
-          {/* Waveform bars — animated via framer-motion foreignObject trick:
-              we use motion.rect inside SVG */}
+          {/* Animated waveform bars */}
           {BAR_CONFIGS.map((bar, i) => (
             <motion.rect
               key={i}
@@ -123,21 +141,14 @@ export function Logo({ onClick }: LogoProps) {
             />
           ))}
 
-          {/* AI spark dot top-right */}
+          {/* AI spark dot */}
           <motion.circle
-            cx="34"
-            cy="7"
-            r="2.5"
-            fill="#a5f3fc"
+            cx="34" cy="7" r="2.5" fill="#a5f3fc"
             animate={{ opacity: [0.5, 1, 0.5], scale: [0.8, 1.2, 0.8] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.circle
-            cx="34"
-            cy="7"
-            r="4"
-            fill="#22d3ee"
-            fillOpacity="0.25"
+            cx="34" cy="7" r="4" fill="#22d3ee" fillOpacity="0.25"
             animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0, 0.3] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -147,16 +158,14 @@ export function Logo({ onClick }: LogoProps) {
       {/* ── Text ── */}
       <div className="flex flex-col leading-tight text-left">
         <motion.span
-          className="font-bold text-base tracking-tight text-foreground"
+          className={`font-bold ${titleCls} tracking-tight text-foreground`}
           style={{ letterSpacing: '-0.01em' }}
-          variants={{
-            hovered: { x: 2, transition: { duration: 0.2 } },
-          }}
+          variants={isInteractive ? { hovered: { x: 2, transition: { duration: 0.2 } } } : {}}
         >
           Transcript
         </motion.span>
         <motion.span
-          className="text-xs font-semibold tracking-widest uppercase"
+          className={`${subtitleCls} font-semibold tracking-widest uppercase`}
           style={{
             background: 'linear-gradient(90deg, #3b82f6, #6366f1, #3b82f6)',
             backgroundSize: '200% 100%',
@@ -164,17 +173,13 @@ export function Logo({ onClick }: LogoProps) {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 0%', '0% 0%'],
-          }}
+          animate={{ backgroundPosition: ['0% 0%', '100% 0%', '0% 0%'] }}
           transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-          variants={{
-            hovered: { x: 2, transition: { duration: 0.2 } },
-          }}
+          variants={isInteractive ? { hovered: { x: 2, transition: { duration: 0.2 } } } : {}}
         >
           Intelligence
         </motion.span>
       </div>
-    </motion.button>
+    </motion.div>
   )
 }

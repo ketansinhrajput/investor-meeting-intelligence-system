@@ -8,11 +8,12 @@
 import { useState, type FormEvent } from 'react';
 import { Loader2} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/AuthContext';
+import { Logo } from '@/components/Logo';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -38,13 +39,10 @@ export function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-sm">
-        <CardHeader className="text-center space-y-2">
-          <img
-            src="https://intranet.gmmpfaudler.com/img/logos/Logo.png"
-            alt="GMMP Faudler Logo"
-            className="mx-auto w-[130px] h-auto"
-          />
-          <CardTitle className="text-xl">Transcript Intelligence</CardTitle>
+        <CardHeader className="text-center space-y-3 pb-2">
+          <div className="flex justify-center">
+            <Logo size="large" />
+          </div>
           <p className="text-sm text-muted-foreground">
             Sign in to your account
           </p>

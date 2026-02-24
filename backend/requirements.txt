@@ -1,0 +1,33 @@
+# FastAPI Backend Requirements
+
+# Core
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+
+# File handling
+aiofiles>=23.2.0
+python-multipart>=0.0.6
+
+# PDF processing (optional, for page count)
+pdfplumber>=0.11.0
+
+# Authentication
+PyJWT>=2.8.0
+bcrypt>=4.0.0
+
+# Database (SQLite — built into Python stdlib, no driver needed)
+sqlalchemy>=2.0.0
+
+# Chat Agent (LLM + Vector Search)
+langchain-ollama>=0.2.0
+langchain-core>=0.3.0
+chromadb>=0.4.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# Development
+httpx>=0.26.0
+pytest>=7.4.0
+pytest-asyncio>=0.23.0

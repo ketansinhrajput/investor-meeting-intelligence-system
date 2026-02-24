@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+
+    /* Role-specific colors */
+    --moderator: 280 60% 60%;
+    --moderator-foreground: 0 0% 100%;
+    --management: 210 70% 50%;
+    --management-foreground: 0 0% 100%;
+    --analyst: 150 60% 40%;
+    --analyst-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted rounded;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded hover:bg-muted-foreground/30;
+  }
+}
+
+@layer components {
+  /* Question/Answer blocks */
+  .qa-question {
+    @apply border-l-4 border-green-500 pl-4 py-2 bg-green-50/50 dark:bg-green-950/20;
+  }
+
+  .qa-answer {
+    @apply border-l-4 border-blue-500 pl-4 py-2 bg-blue-50/50 dark:bg-blue-950/20;
+  }
+
+  /* Trace decision blocks */
+  .trace-decision {
+    @apply border-l-2 border-amber-400 pl-4 py-3 bg-amber-50/30 dark:bg-amber-950/20;
+  }
+
+  /* Evidence highlight */
+  .evidence-highlight {
+    @apply bg-yellow-100 dark:bg-yellow-900/30 px-1 rounded;
+  }
+
+  /* Status indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block mr-2;
+  }
+
+  .status-dot-completed {
+    @apply bg-green-500;
+  }
+
+  .status-dot-running {
+    @apply bg-blue-500 animate-pulse;
+  }
+
+  .status-dot-failed {
+    @apply bg-red-500;
+  }
+
+  .status-dot-queued {
+    @apply bg-yellow-500;
+  }
+}
+
+/* Animation for smooth transitions */
+@layer utilities {
+  .transition-height {
+    transition: height 0.2s ease-out;
+  }
+}
